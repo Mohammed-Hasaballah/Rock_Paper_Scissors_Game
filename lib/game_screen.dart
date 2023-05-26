@@ -22,11 +22,13 @@ class _GameScreenState extends State<GameScreen> {
   late Map<String, Map<String, String>> gameResult;
   static List<String> choices = ["rock", "paper", "scisor"];
   late bool showResult;
+  late bool winner;
   void resetGame() {
     setState(() {
       score = 0;
       clicks = 0;
       showResult = false;
+      winner = false;
       userChoice = 'rock';
       systemChoice = 'rock';
       userChoicePath = 'images/rock_btn.png';
@@ -56,6 +58,7 @@ class _GameScreenState extends State<GameScreen> {
     clicks = 0;
     score = 0;
     showResult = false;
+    winner = false;
     userChoice = 'rock';
     systemChoice = 'rock';
     userChoicePath = 'images/rock_btn.png';
@@ -77,8 +80,7 @@ class _GameScreenState extends State<GameScreen> {
         "scisor": "It's a Draw",
       }
     };
-    clicks = 0;
-    score = 0;
+
     super.initState();
   }
 
@@ -113,7 +115,6 @@ class _GameScreenState extends State<GameScreen> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: const Text('End of the Match'),
                                       content: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
@@ -128,12 +129,22 @@ class _GameScreenState extends State<GameScreen> {
                                               height: 80,
                                             ),
                                           const SizedBox(height: 10),
+                                          const Text(
+                                            'End Of The Match ',
+                                            style: TextStyle(
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black),
+                                          ),
+                                          const SizedBox(height: 10),
                                           Text(
                                             'Your Score Is $score / $maxNumOfRounds',
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.blue),
+                                                color: winner
+                                                    ? Colors.green
+                                                    : Colors.red),
                                           ),
                                         ],
                                       ),
@@ -164,10 +175,7 @@ class _GameScreenState extends State<GameScreen> {
                                   },
                                 );
                               }
-                              if (gameResult[userChoice]![systemChoice]! ==
-                                  'You Win') {
-                                score++;
-                              }
+
                               int userRandomIndex = Random().nextInt(3);
                               userChoice = choices[userRandomIndex];
                               userChoicePath = 'images/${userChoice}_btn.png';
@@ -176,7 +184,14 @@ class _GameScreenState extends State<GameScreen> {
                               systemChoice = choices[systemRandomIndex];
                               systemChoicePath =
                                   'images/${systemChoice}_btn.png';
+                              if (gameResult[userChoice]![systemChoice]! ==
+                                  'You Win') {
+                                score++;
+                              }
                               showResult = true;
+                              if (score >= 5) {
+                                winner = true;
+                              }
                             });
                           },
                           child: Image.asset(userChoicePath)),
@@ -220,17 +235,36 @@ class _GameScreenState extends State<GameScreen> {
                 height: 50,
               ),
               if (showResult)
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    gameResult[userChoice]![systemChoice]!,
-                    style: const TextStyle(fontSize: 24),
-                  ),
+                Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        gameResult[userChoice]![systemChoice]!,
+                        style: const TextStyle(fontSize: 24),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        'Score: ${score.toString()}',
+                        style: const TextStyle(fontSize: 24),
+                      ),
+                    ),
+                  ],
                 ),
             ],
           ),
