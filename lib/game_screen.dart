@@ -114,12 +114,28 @@ class _GameScreenState extends State<GameScreen> {
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                       title: const Text('End of the Match'),
-                                      content: Text(
-                                        'Your Score Is $score / $maxNumOfRounds',
-                                        style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.blue),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          if (score < 5)
+                                            Image.asset(
+                                              'images/fail.png',
+                                              height: 80,
+                                            )
+                                          else
+                                            Image.asset(
+                                              'images/pass.png',
+                                              height: 80,
+                                            ),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            'Your Score Is $score / $maxNumOfRounds',
+                                            style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.blue),
+                                          ),
+                                        ],
                                       ),
                                       actions: [
                                         TextButton(
