@@ -156,8 +156,9 @@ class _GameScreenState extends State<GameScreen> {
                                           },
                                           child: const Text(
                                             'Play Again',
-                                            style:
-                                                TextStyle(color: Colors.black),
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16),
                                           ),
                                         ),
                                         TextButton(
@@ -166,8 +167,10 @@ class _GameScreenState extends State<GameScreen> {
                                           },
                                           child: const Text(
                                             'Exit',
-                                            style:
-                                                TextStyle(color: Colors.black),
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                            ),
                                           ),
                                         ),
                                       ],
