@@ -91,7 +91,7 @@ class _GameScreenState extends State<GameScreen> {
       appBar: AppBar(
         title: const Text(
           'Rock Paper Scissors Game ',
-          style: TextStyle(fontSize: 14),
+          style: TextStyle(fontSize: 14, color: Colors.black),
         ),
         centerTitle: true,
       ),
@@ -207,7 +207,10 @@ class _GameScreenState extends State<GameScreen> {
                       const Text(
                         'You',
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                        ),
                       ),
                     ],
                   )),
@@ -231,7 +234,10 @@ class _GameScreenState extends State<GameScreen> {
                       const Text(
                         'System',
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                        ),
                       ),
                     ],
                   ))
