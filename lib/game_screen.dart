@@ -89,7 +89,10 @@ class _GameScreenState extends State<GameScreen> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 223, 221, 220),
       appBar: AppBar(
-        title: const Text('Rock Paper Scissors Game '),
+        title: const Text(
+          'Rock Paper Scissors Game ',
+          style: TextStyle(fontSize: 14),
+        ),
         centerTitle: true,
       ),
       body: Padding(
@@ -128,19 +131,19 @@ class _GameScreenState extends State<GameScreen> {
                                               'images/pass.png',
                                               height: 80,
                                             ),
-                                          const SizedBox(height: 10),
+                                          const SizedBox(height: 15),
                                           const Text(
                                             'End Of The Match ',
                                             style: TextStyle(
-                                                fontSize: 22,
+                                                fontSize: 16,
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black),
                                           ),
-                                          const SizedBox(height: 10),
+                                          const SizedBox(height: 25),
                                           Text(
                                             'Your Score Is $score / $maxNumOfRounds',
                                             style: TextStyle(
-                                                fontSize: 18,
+                                                fontSize: 12,
                                                 fontWeight: FontWeight.bold,
                                                 color: winner
                                                     ? Colors.green
@@ -158,7 +161,7 @@ class _GameScreenState extends State<GameScreen> {
                                             'Play Again',
                                             style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 16),
+                                                fontSize: 12),
                                           ),
                                         ),
                                         TextButton(
@@ -169,7 +172,7 @@ class _GameScreenState extends State<GameScreen> {
                                             'Exit',
                                             style: TextStyle(
                                               color: Colors.black,
-                                              fontSize: 16,
+                                              fontSize: 12,
                                             ),
                                           ),
                                         ),
@@ -204,14 +207,14 @@ class _GameScreenState extends State<GameScreen> {
                       const Text(
                         'You',
                         style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ],
                   )),
                   const Text(
                     'VS',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -228,7 +231,7 @@ class _GameScreenState extends State<GameScreen> {
                       const Text(
                         'System',
                         style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ))
@@ -249,7 +252,7 @@ class _GameScreenState extends State<GameScreen> {
                       ),
                       child: Text(
                         gameResult[userChoice]![systemChoice]!,
-                        style: const TextStyle(fontSize: 24),
+                        style: const TextStyle(fontSize: 20),
                       ),
                     ),
                     const SizedBox(
@@ -264,7 +267,7 @@ class _GameScreenState extends State<GameScreen> {
                       ),
                       child: Text(
                         'Score: ${score.toString()}',
-                        style: const TextStyle(fontSize: 24),
+                        style: const TextStyle(fontSize: 20),
                       ),
                     ),
                   ],
