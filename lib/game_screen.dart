@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:rock_paper_scissors/start_screen.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
@@ -22,17 +22,14 @@ class _GameScreenState extends State<GameScreen> {
   int maxNumOfRounds = 10;
   late Map<String, Map<String, String>> gameResult;
   static List<String> choices = ["rock", "paper", "scisor"];
-  late bool showResult;
   late bool winner;
   bool isPlay = false;
   double turns = 1;
-  //
 
   void resetGame() {
     setState(() {
       score = 0;
       clicks = 0;
-      showResult = false;
       winner = false;
       userChoice = 'rock';
       systemChoice = 'rock';
@@ -62,7 +59,6 @@ class _GameScreenState extends State<GameScreen> {
   void initState() {
     clicks = 0;
     score = 0;
-    showResult = false;
     winner = false;
     userChoice = 'rock';
     systemChoice = 'rock';
@@ -100,61 +96,72 @@ class _GameScreenState extends State<GameScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                if (showResult)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 24, horizontal: 24),
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          gameResult[userChoice]![systemChoice]!,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        Text(
-                          'Score: ${score.toString()}',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(10),
                   ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        gameResult[userChoice]![systemChoice]!,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      Text(
+                        'Score: ${score.toString()}',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(
                   height: 10,
                 ),
-                if (showResult)
-                  AnimatedRotation(
-                    duration: const Duration(milliseconds: 250),
-                    turns: turns,
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          'images/paper_btn.png',
-                          height: 40,
-                          width: 40,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'images/rock_btn.png',
-                              height: 40,
-                              width: 40,
-                            ),
-                            Image.asset(
-                              'images/scisor_btn.png',
-                              height: 40,
-                              width: 40,
-                            ),
-                          ],
-                        )
-                      ],
+                Visibility(
+                  visible: isPlay,
+                  maintainState: true,
+                  maintainAnimation: true,
+                  maintainSize: true,
+                  child: AnimatedOpacity(
+                    opacity: isPlay ? 1 : 0,
+                    duration: const Duration(milliseconds: 350),
+                    child: AnimatedRotation(
+                      duration: const Duration(milliseconds: 350),
+                      turns: turns,
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            'images/paper_btn.png',
+                            height: 35,
+                            width: 35,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'images/rock_btn.png',
+                                height: 35,
+                                width: 35,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Image.asset(
+                                'images/scisor_btn.png',
+                                height: 35,
+                                width: 35,
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -168,7 +175,7 @@ class _GameScreenState extends State<GameScreen> {
                         children: [
                           AnimatedScale(
                             scale: isPlay ? 0.0 : 1.0,
-                            duration: const Duration(milliseconds: 250),
+                            duration: const Duration(milliseconds: 350),
                             child: Image.asset(userChoicePath),
                           ),
                           const SizedBox(
@@ -198,7 +205,7 @@ class _GameScreenState extends State<GameScreen> {
                         children: [
                           AnimatedScale(
                             scale: isPlay ? 0.0 : 1.0,
-                            duration: const Duration(milliseconds: 250),
+                            duration: const Duration(milliseconds: 350),
                             child: Image.asset(
                               systemChoicePath,
                             ),
@@ -228,10 +235,9 @@ class _GameScreenState extends State<GameScreen> {
                       onTap: () {
                         setState(() {
                           isPlay = true;
-                          showResult = true;
                           turns++;
                         });
-                        Timer(const Duration(milliseconds: 250), () {
+                        Timer(const Duration(milliseconds: 350), () {
                           setState(() {
                             userChoice = 'paper';
                             userChoicePath = 'images/paper_btn.png';
@@ -291,18 +297,22 @@ class _GameScreenState extends State<GameScreen> {
                                             'Play Again',
                                             style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 12),
+                                                fontSize: 11),
                                           ),
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            SystemNavigator.pop();
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const StartScreen()));
                                           },
                                           child: const Text(
-                                            'Exit',
+                                            'Back to Home',
                                             style: TextStyle(
                                               color: Colors.black,
-                                              fontSize: 12,
+                                              fontSize: 11,
                                             ),
                                           ),
                                         ),
@@ -320,7 +330,6 @@ class _GameScreenState extends State<GameScreen> {
                                 'You Win') {
                               score++;
                             }
-
                             if (score >= 5) {
                               winner = true;
                             }
@@ -342,10 +351,9 @@ class _GameScreenState extends State<GameScreen> {
                           onTap: () {
                             setState(() {
                               isPlay = true;
-                              showResult = true;
                               turns++;
                             });
-                            Timer(const Duration(milliseconds: 250), () {
+                            Timer(const Duration(milliseconds: 350), () {
                               setState(() {
                                 userChoice = 'rock';
                                 userChoicePath = 'images/rock_btn.png';
@@ -434,7 +442,6 @@ class _GameScreenState extends State<GameScreen> {
                                     'You Win') {
                                   score++;
                                 }
-
                                 if (score >= 5) {
                                   winner = true;
                                 }
@@ -456,10 +463,9 @@ class _GameScreenState extends State<GameScreen> {
                           onTap: () {
                             setState(() {
                               isPlay = true;
-                              showResult = true;
                               turns++;
                             });
-                            Timer(const Duration(milliseconds: 250), () {
+                            Timer(const Duration(milliseconds: 350), () {
                               setState(() {
                                 userChoice = 'scisor';
                                 userChoicePath = 'images/scisor_btn.png';
@@ -548,7 +554,6 @@ class _GameScreenState extends State<GameScreen> {
                                     'You Win') {
                                   score++;
                                 }
-
                                 if (score >= 5) {
                                   winner = true;
                                 }
