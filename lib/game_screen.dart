@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -23,6 +24,8 @@ class _GameScreenState extends State<GameScreen> {
   static List<String> choices = ["rock", "paper", "scisor"];
   late bool showResult;
   late bool winner;
+  bool isPlay = false;
+  double turns = 1;
   //
 
   void resetGame() {
@@ -89,408 +92,481 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 223, 221, 220),
-      appBar: AppBar(
-        title: const Text(
-          'Rock Paper Scissors Game ',
-          style: TextStyle(fontSize: 14, color: Colors.black),
-        ),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              if (showResult)
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        gameResult[userChoice]![systemChoice]!,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      Text(
-                        'Score: ${score.toString()}',
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ],
-                  ),
-                ),
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 30),
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                if (showResult)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 24, horizontal: 24),
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Image.asset(userChoicePath),
-                        const SizedBox(
-                          height: 20,
+                        Text(
+                          gameResult[userChoice]![systemChoice]!,
+                          style: const TextStyle(fontSize: 16),
                         ),
-                        const Text(
-                          'You',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                          ),
+                        Text(
+                          'Score: ${score.toString()}',
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
-                    )),
-                    const Text(
-                      'VS',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
                     ),
-                    Expanded(
-                        child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                const SizedBox(
+                  height: 10,
+                ),
+                if (showResult)
+                  AnimatedRotation(
+                    duration: const Duration(milliseconds: 250),
+                    turns: turns,
+                    child: Column(
                       children: [
                         Image.asset(
-                          systemChoicePath,
+                          'images/paper_btn.png',
+                          height: 40,
+                          width: 40,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'images/rock_btn.png',
+                              height: 40,
+                              width: 40,
+                            ),
+                            Image.asset(
+                              'images/scisor_btn.png',
+                              height: 40,
+                              width: 40,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 30),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AnimatedScale(
+                            scale: isPlay ? 0.0 : 1.0,
+                            duration: const Duration(milliseconds: 250),
+                            child: Image.asset(userChoicePath),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Text(
+                            'You',
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                                color: Colors.white),
+                          ),
+                        ],
+                      )),
+                      const Text(
+                        'VS',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Expanded(
+                          child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AnimatedScale(
+                            scale: isPlay ? 0.0 : 1.0,
+                            duration: const Duration(milliseconds: 250),
+                            child: Image.asset(
+                              systemChoicePath,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Text(
+                            'System',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ))
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    InkWell(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () {
+                        setState(() {
+                          isPlay = true;
+                          showResult = true;
+                          turns++;
+                        });
+                        Timer(const Duration(milliseconds: 250), () {
+                          setState(() {
+                            userChoice = 'paper';
+                            userChoicePath = 'images/paper_btn.png';
+                            clicks++;
+                            isPlay = false;
+                            if (clicks == maxNumOfRounds) {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return WillPopScope(
+                                    onWillPop: () async {
+                                      resetGame();
+                                      return true;
+                                    },
+                                    child: AlertDialog(
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          if (score < 5)
+                                            Image.asset(
+                                              'images/fail.png',
+                                              height: 80,
+                                            )
+                                          else
+                                            Image.asset(
+                                              'images/pass.png',
+                                              height: 80,
+                                            ),
+                                          const SizedBox(height: 15),
+                                          const Text(
+                                            'End Of The Match ',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black),
+                                          ),
+                                          const SizedBox(height: 25),
+                                          Text(
+                                            'Your Score Is $score / $maxNumOfRounds',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                                color: winner
+                                                    ? Colors.green
+                                                    : Colors.red),
+                                          ),
+                                        ],
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            resetGame();
+                                          },
+                                          child: const Text(
+                                            'Play Again',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 12),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            SystemNavigator.pop();
+                                          },
+                                          child: const Text(
+                                            'Exit',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+
+                            int systemRandomIndex = Random().nextInt(3);
+                            systemChoice = choices[systemRandomIndex];
+                            systemChoicePath = 'images/${systemChoice}_btn.png';
+                            if (gameResult[userChoice]![systemChoice]! ==
+                                'You Win') {
+                              score++;
+                            }
+
+                            if (score >= 5) {
+                              winner = true;
+                            }
+                          });
+                        });
+                      },
+                      child: Image.asset(
+                        'images/paper_btn.png',
+                        height: 80,
+                        width: 80,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () {
+                            setState(() {
+                              isPlay = true;
+                              showResult = true;
+                              turns++;
+                            });
+                            Timer(const Duration(milliseconds: 250), () {
+                              setState(() {
+                                userChoice = 'rock';
+                                userChoicePath = 'images/rock_btn.png';
+                                clicks++;
+                                isPlay = false;
+                                if (clicks == maxNumOfRounds) {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return WillPopScope(
+                                        onWillPop: () async {
+                                          resetGame();
+                                          return true;
+                                        },
+                                        child: AlertDialog(
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              if (score < 5)
+                                                Image.asset(
+                                                  'images/fail.png',
+                                                  height: 80,
+                                                )
+                                              else
+                                                Image.asset(
+                                                  'images/pass.png',
+                                                  height: 80,
+                                                ),
+                                              const SizedBox(height: 15),
+                                              const Text(
+                                                'End Of The Match ',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black),
+                                              ),
+                                              const SizedBox(height: 25),
+                                              Text(
+                                                'Your Score Is $score / $maxNumOfRounds',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: winner
+                                                        ? Colors.green
+                                                        : Colors.red),
+                                              ),
+                                            ],
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                resetGame();
+                                              },
+                                              child: const Text(
+                                                'Play Again',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 12),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                SystemNavigator.pop();
+                                              },
+                                              child: const Text(
+                                                'Exit',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
+                                int systemRandomIndex = Random().nextInt(3);
+                                systemChoice = choices[systemRandomIndex];
+                                systemChoicePath =
+                                    'images/${systemChoice}_btn.png';
+                                if (gameResult[userChoice]![systemChoice]! ==
+                                    'You Win') {
+                                  score++;
+                                }
+
+                                if (score >= 5) {
+                                  winner = true;
+                                }
+                              });
+                            });
+                          },
+                          child: Image.asset(
+                            'images/rock_btn.png',
+                            height: 80,
+                            width: 80,
+                          ),
                         ),
                         const SizedBox(
-                          height: 20,
+                          width: 10,
                         ),
-                        const Text(
-                          'System',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
+                        InkWell(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () {
+                            setState(() {
+                              isPlay = true;
+                              showResult = true;
+                              turns++;
+                            });
+                            Timer(const Duration(milliseconds: 250), () {
+                              setState(() {
+                                userChoice = 'scisor';
+                                userChoicePath = 'images/scisor_btn.png';
+                                clicks++;
+                                isPlay = false;
+                                if (clicks == maxNumOfRounds) {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return WillPopScope(
+                                        onWillPop: () async {
+                                          resetGame();
+                                          return true;
+                                        },
+                                        child: AlertDialog(
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              if (score < 5)
+                                                Image.asset(
+                                                  'images/fail.png',
+                                                  height: 80,
+                                                )
+                                              else
+                                                Image.asset(
+                                                  'images/pass.png',
+                                                  height: 80,
+                                                ),
+                                              const SizedBox(height: 15),
+                                              const Text(
+                                                'End Of The Match ',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black),
+                                              ),
+                                              const SizedBox(height: 25),
+                                              Text(
+                                                'Your Score Is $score / $maxNumOfRounds',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: winner
+                                                        ? Colors.green
+                                                        : Colors.red),
+                                              ),
+                                            ],
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                resetGame();
+                                              },
+                                              child: const Text(
+                                                'Play Again',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 12),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                SystemNavigator.pop();
+                                              },
+                                              child: const Text(
+                                                'Exit',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
+                                int systemRandomIndex = Random().nextInt(3);
+                                systemChoice = choices[systemRandomIndex];
+                                systemChoicePath =
+                                    'images/${systemChoice}_btn.png';
+                                if (gameResult[userChoice]![systemChoice]! ==
+                                    'You Win') {
+                                  score++;
+                                }
+
+                                if (score >= 5) {
+                                  winner = true;
+                                }
+                              });
+                            });
+                          },
+                          child: Image.asset(
+                            'images/scisor_btn.png',
+                            height: 80,
+                            width: 80,
                           ),
                         ),
                       ],
-                    ))
+                    )
                   ],
-                ),
-              ),
-              Column(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        userChoice = 'paper';
-                        userChoicePath = 'images/paper_btn.png';
-                        clicks++;
-                        if (clicks == maxNumOfRounds) {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) {
-                              return WillPopScope(
-                                onWillPop: () async {
-                                  resetGame();
-                                  return true;
-                                },
-                                child: AlertDialog(
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      if (score < 5)
-                                        Image.asset(
-                                          'images/fail.png',
-                                          height: 80,
-                                        )
-                                      else
-                                        Image.asset(
-                                          'images/pass.png',
-                                          height: 80,
-                                        ),
-                                      const SizedBox(height: 15),
-                                      const Text(
-                                        'End Of The Match ',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black),
-                                      ),
-                                      const SizedBox(height: 25),
-                                      Text(
-                                        'Your Score Is $score / $maxNumOfRounds',
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: winner
-                                                ? Colors.green
-                                                : Colors.red),
-                                      ),
-                                    ],
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        resetGame();
-                                      },
-                                      child: const Text(
-                                        'Play Again',
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 12),
-                                      ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        SystemNavigator.pop();
-                                      },
-                                      child: const Text(
-                                        'Exit',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        }
-
-                        int systemRandomIndex = Random().nextInt(3);
-                        systemChoice = choices[systemRandomIndex];
-                        systemChoicePath = 'images/${systemChoice}_btn.png';
-                        if (gameResult[userChoice]![systemChoice]! ==
-                            'You Win') {
-                          score++;
-                        }
-                        showResult = true;
-                        if (score >= 5) {
-                          winner = true;
-                        }
-                      });
-                    },
-                    child: Image.asset(
-                      'images/paper_btn.png',
-                      height: 80,
-                      width: 80,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            userChoice = 'rock';
-                            userChoicePath = 'images/rock_btn.png';
-                            clicks++;
-                            if (clicks == maxNumOfRounds) {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return WillPopScope(
-                                    onWillPop: () async {
-                                      resetGame();
-                                      return true;
-                                    },
-                                    child: AlertDialog(
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          if (score < 5)
-                                            Image.asset(
-                                              'images/fail.png',
-                                              height: 80,
-                                            )
-                                          else
-                                            Image.asset(
-                                              'images/pass.png',
-                                              height: 80,
-                                            ),
-                                          const SizedBox(height: 15),
-                                          const Text(
-                                            'End Of The Match ',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black),
-                                          ),
-                                          const SizedBox(height: 25),
-                                          Text(
-                                            'Your Score Is $score / $maxNumOfRounds',
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                                color: winner
-                                                    ? Colors.green
-                                                    : Colors.red),
-                                          ),
-                                        ],
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                            resetGame();
-                                          },
-                                          child: const Text(
-                                            'Play Again',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 12),
-                                          ),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            SystemNavigator.pop();
-                                          },
-                                          child: const Text(
-                                            'Exit',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-                            }
-                            int systemRandomIndex = Random().nextInt(3);
-                            systemChoice = choices[systemRandomIndex];
-                            systemChoicePath = 'images/${systemChoice}_btn.png';
-                            if (gameResult[userChoice]![systemChoice]! ==
-                                'You Win') {
-                              score++;
-                            }
-                            showResult = true;
-                            if (score >= 5) {
-                              winner = true;
-                            }
-                          });
-                        },
-                        child: Image.asset(
-                          'images/rock_btn.png',
-                          height: 80,
-                          width: 80,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            userChoice = 'scisor';
-                            userChoicePath = 'images/scisor_btn.png';
-                            clicks++;
-                            if (clicks == maxNumOfRounds) {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return WillPopScope(
-                                    onWillPop: () async {
-                                      resetGame();
-                                      return true;
-                                    },
-                                    child: AlertDialog(
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          if (score < 5)
-                                            Image.asset(
-                                              'images/fail.png',
-                                              height: 80,
-                                            )
-                                          else
-                                            Image.asset(
-                                              'images/pass.png',
-                                              height: 80,
-                                            ),
-                                          const SizedBox(height: 15),
-                                          const Text(
-                                            'End Of The Match ',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black),
-                                          ),
-                                          const SizedBox(height: 25),
-                                          Text(
-                                            'Your Score Is $score / $maxNumOfRounds',
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                                color: winner
-                                                    ? Colors.green
-                                                    : Colors.red),
-                                          ),
-                                        ],
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                            resetGame();
-                                          },
-                                          child: const Text(
-                                            'Play Again',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 12),
-                                          ),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            SystemNavigator.pop();
-                                          },
-                                          child: const Text(
-                                            'Exit',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-                            }
-                            int systemRandomIndex = Random().nextInt(3);
-                            systemChoice = choices[systemRandomIndex];
-                            systemChoicePath = 'images/${systemChoice}_btn.png';
-                            if (gameResult[userChoice]![systemChoice]! ==
-                                'You Win') {
-                              score++;
-                            }
-                            showResult = true;
-                            if (score >= 5) {
-                              winner = true;
-                            }
-                          });
-                        },
-                        child: Image.asset(
-                          'images/scisor_btn.png',
-                          height: 80,
-                          width: 80,
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
