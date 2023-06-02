@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:rock_paper_scissors/start_screen.dart';
 
 class GameScreen extends StatefulWidget {
@@ -418,13 +417,17 @@ class _GameScreenState extends State<GameScreen> {
                                             ),
                                             TextButton(
                                               onPressed: () {
-                                                SystemNavigator.pop();
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const StartScreen()));
                                               },
                                               child: const Text(
-                                                'Exit',
+                                                'Back to Home',
                                                 style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 12,
+                                                  fontSize: 11,
                                                 ),
                                               ),
                                             ),
@@ -530,13 +533,17 @@ class _GameScreenState extends State<GameScreen> {
                                             ),
                                             TextButton(
                                               onPressed: () {
-                                                SystemNavigator.pop();
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const StartScreen()));
                                               },
                                               child: const Text(
-                                                'Exit',
+                                                'Back to Home',
                                                 style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 12,
+                                                  fontSize: 11,
                                                 ),
                                               ),
                                             ),
