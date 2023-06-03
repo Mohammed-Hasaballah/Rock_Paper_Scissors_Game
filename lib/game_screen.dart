@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rock_paper_scissors/start_screen.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({Key? key}) : super(key: key);
@@ -24,7 +25,6 @@ class _GameScreenState extends State<GameScreen> {
   late bool winner;
   bool isPlay = false;
   double turns = 1;
-
   void resetGame() {
     setState(() {
       score = 0;
@@ -54,6 +54,11 @@ class _GameScreenState extends State<GameScreen> {
     });
   }
 
+  void playMusic(String x) {
+    final player = AudioPlayer();
+    player.play(AssetSource('$x.mp3'));
+  }
+
   @override
   void initState() {
     clicks = 0;
@@ -80,7 +85,6 @@ class _GameScreenState extends State<GameScreen> {
         "scisor": "Draw",
       }
     };
-
     super.initState();
   }
 
@@ -174,7 +178,7 @@ class _GameScreenState extends State<GameScreen> {
                         children: [
                           AnimatedScale(
                             scale: isPlay ? 0.0 : 1.0,
-                            duration: const Duration(milliseconds: 350),
+                            duration: const Duration(milliseconds: 500),
                             child: Image.asset(userChoicePath),
                           ),
                           const SizedBox(
@@ -204,7 +208,7 @@ class _GameScreenState extends State<GameScreen> {
                         children: [
                           AnimatedScale(
                             scale: isPlay ? 0.0 : 1.0,
-                            duration: const Duration(milliseconds: 350),
+                            duration: const Duration(milliseconds: 500),
                             child: Image.asset(
                               systemChoicePath,
                             ),
@@ -235,9 +239,12 @@ class _GameScreenState extends State<GameScreen> {
                         setState(() {
                           isPlay = true;
                           turns++;
+                          playMusic('loop');
                         });
-                        Timer(const Duration(milliseconds: 350), () {
+
+                        Timer(const Duration(milliseconds: 500), () {
                           setState(() {
+                            playMusic('pop_up');
                             userChoice = 'paper';
                             userChoicePath = 'images/paper_btn.png';
                             clicks++;
@@ -351,9 +358,11 @@ class _GameScreenState extends State<GameScreen> {
                             setState(() {
                               isPlay = true;
                               turns++;
+                              playMusic('loop');
                             });
-                            Timer(const Duration(milliseconds: 350), () {
+                            Timer(const Duration(milliseconds: 500), () {
                               setState(() {
+                                playMusic('pop_up');
                                 userChoice = 'rock';
                                 userChoicePath = 'images/rock_btn.png';
                                 clicks++;
@@ -467,9 +476,11 @@ class _GameScreenState extends State<GameScreen> {
                             setState(() {
                               isPlay = true;
                               turns++;
+                              playMusic('loop');
                             });
-                            Timer(const Duration(milliseconds: 350), () {
+                            Timer(const Duration(milliseconds: 500), () {
                               setState(() {
+                                playMusic('pop_up');
                                 userChoice = 'scisor';
                                 userChoicePath = 'images/scisor_btn.png';
                                 clicks++;
